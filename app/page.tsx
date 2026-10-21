@@ -40,10 +40,13 @@ async function getJobs(
     worldwide: String(worldwide),
   });
 
-  try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ?? "https://remotejobs-smoky.vercel.app/";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ??
+    (process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
 
+  try {
     const res = await fetch(
       `${baseUrl}/api/jobs?${params.toString()}`,
       { cache: "no-store" }
@@ -65,6 +68,9 @@ async function getJobs(
     };
   }
 }
+
+// Keep your existing default Home component below this point.
+
 
 export default async function Home({
   searchParams,
