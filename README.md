@@ -34,3 +34,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+### Scheduled job-feed refresh
+
+Vercel runs `/api/cron/refresh` every six hours at 00:00, 06:00, 12:00, and 18:00 UTC. The route clears and repopulates the cached software-engineering job feeds. Other categories refresh their own cached feeds on first request and then at least daily. Running more than once daily requires a Vercel Pro or Enterprise plan; Hobby only allows daily schedules.
+
+Set `CRON_SECRET` as a Production environment variable in Vercel before deploying. Vercel sends this value as a bearer token to cron routes. Generate a secret with `openssl rand -hex 32`; do not commit the value to the repository.

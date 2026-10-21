@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cacheLife, cacheTag } from "next/cache";
 import Parser from "rss-parser";
 
 // export const runtime = "nodejs";
@@ -293,6 +294,10 @@ function normalizeJob(
 }
 
 async function fetchJson(url: string) {
+  "use cache";
+  cacheLife({ stale: 3600, revalidate: 86400, expire: 172800 });
+  cacheTag("job-feeds");
+
   const response = await fetch(url, {
     headers: { Accept: "application/json" },
     signal: AbortSignal.timeout(8000),
@@ -306,6 +311,10 @@ async function fetchJson(url: string) {
 }
 
 async function fetchRss(url: string) {
+  "use cache";
+  cacheLife({ stale: 3600, revalidate: 86400, expire: 172800 });
+  cacheTag("job-feeds");
+
   const response = await fetch(url, {
     headers: { "User-Agent": "RemoteJobsAggregator/1.0" },
     signal: AbortSignal.timeout(8000),
