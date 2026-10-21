@@ -1,5 +1,6 @@
 
 import JobsDashboard from "@/app/components/jobs-dashboard";
+import { GET as getJobsRoute } from "@/app/api/jobs/route";
 
 export const instant = false;
 
@@ -40,16 +41,9 @@ async function getJobs(
     worldwide: String(worldwide),
   });
 
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ??
-    (process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : "http://localhost:3000");
-
   try {
-    const res = await fetch(
-      `${baseUrl}/api/jobs?${params.toString()}`,
-      { cache: "no-store" }
+    const res = await getJobsRoute(
+      new Request(`http://localhost/api/jobs?${params.toString()}`)
     );
 
     if (!res.ok) {
@@ -63,7 +57,14 @@ async function getJobs(
     return {
       total: 0,
       filters: { worldwide, category },
-      sources: [],
+      sources: [
+        {
+          source: "Job feeds",
+          status: "error",
+          count: 0,
+          error: error instanceof Error ? error.message : "Request failed",
+        },
+      ],
       jobs: [],
     };
   }
@@ -80,6 +81,7 @@ export default async function Home({
     worldwide?: string;
   }>;
 }) {
+
   const params = await searchParams;
   const category = params.category ?? "software-dev";
   const worldwide = params.worldwide === "true";

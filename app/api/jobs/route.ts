@@ -295,7 +295,7 @@ function normalizeJob(
 async function fetchJson(url: string) {
   const response = await fetch(url, {
     headers: { Accept: "application/json" },
-    signal: AbortSignal.timeout(12000),
+    signal: AbortSignal.timeout(8000),
   });
 
   if (!response.ok) {
@@ -308,7 +308,7 @@ async function fetchJson(url: string) {
 async function fetchRss(url: string) {
   const response = await fetch(url, {
     headers: { "User-Agent": "RemoteJobsAggregator/1.0" },
-    signal: AbortSignal.timeout(12000),
+    signal: AbortSignal.timeout(8000),
   });
 
   if (!response.ok) {
